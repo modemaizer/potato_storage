@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            div {
+                margin-top: 3em;
+            }
+            
+            .fa-circle {
+                color: {{HEATER_COLOR}};
+            }
+        </style>
+        <title>Погреб</title>
+    </head>
+    <body>
+        <br>
+        <div style="text-align: right;"><a href="/settings"><i class="fa fa-cog fa-2xl" aria-hidden="true"></i></a></div>
+        <div style="text-align: center;"><i class="fas fa-thermometer-quarter fa-2xl" aria-hidden="true"> {{AIR_TEMPERATURE}} &deg;C</i></div>
+        <div style="text-align: center;"><i class="fas fa-droplet fa-2xl" aria-hidden="true"> {{HUMIDITY}} %</i></div>
+        <br>
+        <hr>
+        <div style="text-align: center;" >
+            <span class="fa-stack" >
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-thermometer-quarter fa-2xl fa-stack-1x fa-inverse"></i>
+            </span>
+            <i class="fas fa-2xl">{{FLOOR_TEMPERATURE}} &deg;C</i>
+        </div>
+        
+    </body>
+</html>
