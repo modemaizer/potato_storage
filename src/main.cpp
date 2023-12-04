@@ -243,20 +243,35 @@ void readFloor() {
 }
 
 void readAir() {
-  if (am.measure()) {
-    amTemp = am.getTemperature();
-    humidity = am.getHumidity();
-    amError = false;
-    amErrorText = "";
-  }
-  else {  // error has occured
-    amTemp = 0;
-    humidity = 0;
-    amError = true;
-    int errorCode = am.getErrorCode();
-    switch (errorCode) {
-      case 1: amErrorText = "Sensor offline"; break;
-      case 2: amErrorText = "CRC validation failed"; break;
+  float tempSum = 0;
+  float humSum = 0;
+  byte count = 0;
+  int errorCode = 0;
+  for(int i=0; i<5; i++) {
+    if (am.measure()) {
+      tempSum += am.getTemperature();
+      humSum += am.getHumidity();
+      count ++;
+      delay(20);
+    }
+    else {  // error has occured
+      errorCode = am.getErrorCode();
+      delay(20);
+    }
+    if (count == 0) {
+      amTemp = 0;
+      humidity = 0;
+      amError = true;
+      switch (errorCode) {
+        case 1: amErrorText = "Sensor offline"; break;
+        case 2: amErrorText = "CRC validation failed"; break;
+      }
+    }
+    else {
+      amTemp = tempSum / count;
+      humidity = humSum / count;
+      amError = false;
+      amErrorText = "";
     }
   }
 }
