@@ -127,7 +127,7 @@ void restServerRouting() {
   httpServer.on(F("/"), HTTP_GET, getMainPage);
   httpServer.on(F("/data"), HTTP_GET, getData);
   httpServer.on(F("/settings"), HTTP_GET, getSettings);
-  httpServer.on(F("/settings/update"), HTTP_POST, updateSettings);
+  httpServer.on(F("/settings/update"), HTTP_GET, updateSettings);
 }
 
 void handleNotFound() {
@@ -232,7 +232,6 @@ void setupNetwork() {
 }
 
 void readFloor() {
-  ds.requestTemp();
   if (ds.readTemp()) {
     dsTemp = ds.getTemp();
     dsError = false;
@@ -300,7 +299,8 @@ void processHeater() {
 }
 
 void processSensors() {
-  readAir();
+  ds.requestTemp(); // to get actual data we give some time for floor sensor
+  readAir();        // while air sensor is processing
   readFloor();
 
   if(dsError) {
@@ -337,7 +337,7 @@ void resetSettings() {
 void setup() {
   initSettings();
   SPIFFS.begin();
-
+  ds.setResolution(10);
   am.begin(D2, D1);
 
   pinMode(D5, OUTPUT);
@@ -353,12 +353,10 @@ void setup() {
 }
 
 void loop() {
-
   btn.tick();
   if(btn.click()) {
     showIp();
   }
-
   if(btn.holdFor(2000)) {
     resetSettings();
   }
@@ -368,7 +366,6 @@ void loop() {
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
     processSensors();
-    
   }
 
   httpServer.handleClient();
