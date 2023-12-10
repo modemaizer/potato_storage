@@ -1,6 +1,7 @@
 #define INIT_ADDR 0
 #define INIT_KEY 50
 #define SETTINGS_ADDR 1
+#define MDNS_NAME "potato"
 
 #include <AM2320.h>
 #include <ESP8266WiFi.h>
@@ -209,10 +210,11 @@ void setupWiFi() {
 }
 
 void setupMdns() {
-  if (MDNS.begin(mdnsName)) {
+  if (MDNS.begin(MDNS_NAME)) {
+    MDNS.addService("http", "tcp", 80);
     char buf[30];
     strcpy(buf, "MDNS name: ");
-    strcat(buf, mdnsName);
+    strcat(buf, MDNS_NAME);
     showText(buf, 2, 2000);
   }
 }
@@ -383,6 +385,7 @@ void loop() {
     processSensors();
   }
 
+  MDNS.update();
   httpServer.handleClient();
 }
 
