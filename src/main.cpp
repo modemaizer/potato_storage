@@ -1,6 +1,8 @@
 #define INIT_ADDR 0
 #define INIT_KEY 50
 #define SETTINGS_ADDR 1
+#define WIFI_SSID ""
+#define WIFI_PASS ""
 #define MDNS_NAME "potato"
 
 #include <AM2320.h>
@@ -21,10 +23,6 @@ struct Settings {
   float floorTemperatureLow = 10;
   float floorTemperatureHigh = 13;
 };
-
-const char *mdnsName = "potato";
-const char *ssid = "";
-const char *password = "";
 
 IPAddress local_IP(192, 168, 1, 220);
 IPAddress gateway(192, 168, 1, 1);
@@ -193,7 +191,7 @@ void setupWiFi() {
   if (!WiFi.config(local_IP, gateway, subnet)) {
     wifiText = "IP config failed!";
   }
-  WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
   int retries = 0;
   while ((WiFi.status() != WL_CONNECTED) && (retries < 15)) {
     retries++;
