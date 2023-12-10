@@ -242,6 +242,8 @@ void readFloor() {
     dsTemp = 0;
     dsError = true;
   }
+  ds.setResolution(10);
+  ds.requestTemp();
 }
 
 void readAir() {
@@ -316,7 +318,6 @@ void processHeater() {
 }
 
 void processSensors() {
-  ds.requestTemp(); // to get actual data we give some time for floor sensor
   readAir();        // while air sensor is processing
   readFloor();
 
@@ -354,7 +355,6 @@ void resetSettings() {
 void setup() {
   initSettings();
   SPIFFS.begin();
-  ds.setResolution(10);
   am.begin(D2, D1);
 
   pinMode(D5, OUTPUT);
@@ -379,7 +379,6 @@ void loop() {
   }
 
   unsigned long currentMillis = millis();
-
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
     processSensors();
