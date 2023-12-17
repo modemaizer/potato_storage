@@ -1,9 +1,6 @@
 #define INIT_ADDR 0
 #define INIT_KEY 50
 #define SETTINGS_ADDR 1
-#define WIFI_SSID ""
-#define WIFI_PASS ""
-#define MDNS_NAME "potato"
 
 #include <AM2320.h>
 #include <ESP8266WiFi.h>
@@ -17,6 +14,8 @@
 #include <EEPROM.h>
 #include <ArduinoJson.h>
 
+#include "defines.h"
+
 struct Settings {
   float airTemperature = 4;
   float airTemperatureDelta = 0.1;
@@ -24,12 +23,11 @@ struct Settings {
   float floorTemperatureHigh = 13;
 };
 
-IPAddress local_IP(192, 168, 1, 220);
+IPAddress local_IP(192, 168, 1, IP_ADDRESS_LAST_BYTE);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 0, 0);
 
-const long interval = 5000;  // interval between sensors checks (milliseconds)
-unsigned long previousMillis = 0;  // last time sensors were checked
+uint32_t previousMillis = 0;  // last time sensors were checked
 
 float dsTemp = 0;
 float amTemp = 0;
@@ -376,8 +374,8 @@ void loop() {
     resetSettings();
   }
 
-  unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= interval) {
+  uint32_t currentMillis = millis();
+  if (currentMillis - previousMillis >= SENSORS_CHECK_INTERVAL) {
     previousMillis = currentMillis;
     processSensors();
   }
