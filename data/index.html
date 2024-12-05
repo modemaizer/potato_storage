@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru-RU">
     <head>
-        <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAH/UpPF/1B9r/9HgLb/bp/F/wEAAf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAdqf/P22d/0dyof9LdaL/UHyt/056rP9Leqr/OmWW/02St/8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2YZP/SnWi/1mHt/9ai7f/Y4u2/1+Ltv9uuPP/Voey/1aDs/9DbZz/NmGS/wAAAAAAAAAAAAAAAAAAAAALITX/VYKt/2KLuv9kk8D/a5fG/3Sfxf9ym8H/a5fC/2eTvv9jj7r/Voey/0Jsmv8nQVn/AAAAAAAAAAAAAAAAMGKY/02GsP9rl8L/c5/K/3Wgy/+Cp83/fanO/3ij0P91oMv/bpnF/2OOu/9Wg67/PWWX/wAAAAAAAAAAAAAAADV4sf9kj7X/gqfN/3Sfyv9iibX/i6fP/4Knzf9zo8//daDM/3eizv9vmb//VoOu/056p/8DAQH/AAAAAAAAAAAvMDD/ZI+1/4Knzf+Cp83/gqfN/4Knzf+Cp83/favF/3Shzf+Cp83/ep/H/2ONuP9Sfqz/NGWZ/wAAAAAAAAAAAAAAAEp1nf9uncv/gqfN/4Knzf+BqM7/gqfN/4Knzf+Cp83/gqfN/4Knzf9ok7n/Voey/0Frmf8BCBn/AAAAAAAAAADx8vH5hqTR/3Wgy/+Cpsr/gqfN/36pzP+Cp83/gqfN/4Knzf+Cp83/ep/H/2OPvP9Wg7P/P2mZ/9TU1P8AAAAAAAAAAOHg3v99rMb/fKjO/4Knzf+Cp83/dJ/K/36ozv+Cp83/gqfN/4Knzf9xl8H/XYax/0dyof81hLH/AAAAAAAAAAAAAAAAAAAAAGuWwf+Cp83/gqfN/3Sj0P+Dp83/gqfN/1iWyf+Cp83/a5fC/1+Hsv9JdKH/R2qk/wAAAAAAAAAAAAAAAAAAAAAAAAAAgajO/3Wgy/91oMv/gajO/3Oiyf+Cp83/dqHN/2WTv/9ai7b/RG2e/2aSuP8AAAAAAAAAAAAAAAAAAAAAAAAAAKGioP+Bp8v/daDL/3Wgy/9/qM7/fKjO/2uXx/9djLz/UoOw/0Njmf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////OUx2qP9mkbj/e8Xy/2iPuv9di7b/Un6s/z5ik//+/v75AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/f39MwkQGf81ZJX/NmGS/w4aKv8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4H8AAMAfAACADwAAAAcAAAAHAAAAAwAAAAMAAIABAACAAAAAwAAAAPAAAAD4AAAA+AEAAP4BAAD/hwAA//8AAA==" rel="icon" type="image/x-icon">
         <meta http-equiv="Content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
@@ -10,27 +9,136 @@
             div {
                 margin-top: 3em;
             }
-            
             .fa-circle {
-                color: {{HEATER_COLOR}};
+                color: blue;
+            }
+            button {
+                font-size: 2em;
+                text-align: center;
+            }
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 100px;
+                height: 50px;
+            }
+            .switch input { 
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 40px;
+                width: 40px;
+                left: 5px;
+                bottom: 5px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+            input:checked + .slider {
+                background-color: #1dc317;
+            }
+            input:focus + .slider {
+                box-shadow: 0 0 1px #1dc317;
+            }
+            input:checked + .slider:before {
+                -webkit-transform: translateX(50px);
+                -ms-transform: translateX(50px);
+                transform: translateX(50px);
+            }
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+            .slider.round:before {
+                border-radius: 50%;
             }
         </style>
+        <script>
+            function toggleState() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        document.getElementById("switch_chk").checked = xhr.response == 1;
+                    }
+                }
+                xhr.open("GET", "/switch", true);
+                xhr.send();
+            }
+            function getData() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        var response = JSON.parse(xhr.responseText);
+                        var humidityField = document.getElementById("humidity").firstChild; 
+                        if (response.airSensorOk) {
+                            airTempField.data = ` ${response.humidity.toFixed(2)} %`;
+                        }
+                        var airTempField = document.getElementById("air_temp").firstChild;
+                        if (response.airSensorOk) {
+                            airTempField.data = ` ${response.airTemperature.toFixed(2)} °C`;
+                        }
+                        else {
+                            airTempField.data = ` ${response.airSensorError}`;
+                        }
+                        
+                        var floorTempField = document.getElementById("floor_temp").firstChild;
+                        if (response.floorSensorOk) {
+                            floorTempField.data = ` ${response.floorTemperature.toFixed(2)} °C`;
+                        }
+                        else {
+                            floorTempField.data = " SENSOR ERROR";
+                        }
+                        document.querySelector('.fa-circle').style.color = response.heaterEnabled ? 'red' : 'blue';
+                        document.getElementById("switch_chk").checked = response.enabled;
+                    }
+                }
+                xhr.open("GET", "/data", true);
+                xhr.send();
+            }
+            getData();
+            setInterval(getData, 2000);
+        </script>
         <title>Погреб</title>
     </head>
     <body>
         <br>
-        <div style="text-align: right;"><a href="/settings"><i class="fa fa-cog fa-2xl" aria-hidden="true"></i></a></div>
-        <div style="text-align: center;"><i class="fas fa-thermometer-quarter fa-2xl" aria-hidden="true"> {{AIR_TEMPERATURE}} &deg;C</i></div>
-        <div style="text-align: center;"><i class="fas fa-droplet fa-2xl" aria-hidden="true"> {{HUMIDITY}} %</i></div>
-        <br>
-        <hr>
+        <div style="text-align: right;"><a href="/settings"><i class="fa fa-cog fa-3x" aria-hidden="true"></i></a></div>
+        <div style="text-align: center;">
+            <label class="switch">
+                <input type="checkbox" id="switch_chk" onclick="toggleState();">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <div style="text-align: center;"><i id="humidity" class="fas fa-humidity fa-2xl" aria-hidden="true"> &nbsp;</i></div>
         <div style="text-align: center;" >
             <span class="fa-stack" >
                 <i class="fas fa-circle fa-stack-2x"></i>
                 <i class="fas fa-thermometer-quarter fa-2xl fa-stack-1x fa-inverse"></i>
             </span>
-            <i class="fas fa-2xl">{{FLOOR_TEMPERATURE}} &deg;C</i>
+            <i id="air_temp" class="fas fa-2xl"> &nbsp;</i>
         </div>
-        
+        <div style="text-align: center;" >
+            <span class="fa-stack" >
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-thermometer-quarter fa-2xl fa-stack-1x fa-inverse"></i>
+            </span>
+            <i id="floor_temp" class="fas fa-2xl"> &nbsp;</i>
+        </div>
     </body>
 </html>
