@@ -92,6 +92,9 @@ void processSensors() {
   btn.tick();
   if(btn.holdFor(2000)) {
     resetSettings();
+  } 
+  else if (btn.holdFor(5000)) {
+    ESP.restart();
   }
 }
 

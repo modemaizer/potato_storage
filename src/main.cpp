@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "mdns.h"
 #include "mqtt.h"
+#include "ota.h"
 
 void onWifiConnected() {
   setupMdns();
@@ -22,6 +23,7 @@ void processNetwork() {
   processMdns();
   processHttp();
   processMqtt();
+  processOta();
 }
 
 void setup() {

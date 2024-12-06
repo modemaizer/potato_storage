@@ -55,6 +55,9 @@ static void parseIncomingCommand(char *topic, byte *payload, unsigned int length
   else if (strstr(command, "delta ") != NULL) {
     setSettingsAirTemperatureDelta(atof(&command[6]));
   }
+  else if (strcmp(command, "restart") == 0) {
+    ESP.restart();
+  }
   
   mqttPrintf(MQTT_LOG_TOPIC, "%s", command);
 }

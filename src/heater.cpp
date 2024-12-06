@@ -14,7 +14,7 @@ void switchHeater(bool enable) {
 }
 
 static boolean needHeat() {
-  if(!isFloorSensorOk() || !isAirSensorOk() || (getAirTemperature() >= getAirTemperatureHighBound() && getFloorTemperature() > getSettingsAirTemperature())) {
+  if(!getDeviceState() || !isFloorSensorOk() || !isAirSensorOk() || (getAirTemperature() >= getAirTemperatureHighBound() && getFloorTemperature() > getSettingsAirTemperature())) {
     return false;
   }
   return (getAirTemperature() <= getAirTemperatureLowBound() || getFloorTemperature() < getSettingsAirTemperature() - 2 || getFloorTemperature() <= 0);

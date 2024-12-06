@@ -1,0 +1,17 @@
+{
+    "name": "Термостат погреба",
+    "about": "Используется для контроля температуры и влажности воздуха и температуры пола в погребе",
+    "version": "0.6",
+    "notes": "",
+    "builds": [
+      {
+        "chipFamily": "ESP8266",
+        "parts": [
+          {
+            "path": "https://192.168.13.200/firmwares/potato_storage/firmware.bin",
+            "offset": 0
+          }
+        ]
+      }
+    ]
+  }
