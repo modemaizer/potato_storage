@@ -3,6 +3,8 @@
 #include "defines.h"
 #include "sensors.h"
 #include "settings.h"
+#include "mqtt.h"
+#include "heater.h"
 
 void setupHeater() {
   pinMode(HEATER_PIN, OUTPUT);
@@ -10,7 +12,11 @@ void setupHeater() {
 }
 
 void switchHeater(bool enable) {
+  bool currentState = isHeaterEnabled();
   digitalWrite(HEATER_PIN, enable ? HIGH : LOW);
+  if(currentState != isHeaterEnabled()) {
+    mqttSendDeviceState();
+  }
 }
 
 static boolean needHeat() {
