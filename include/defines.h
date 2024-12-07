@@ -1,6 +1,6 @@
 #pragma once
 
-#define CURRENT_VERSION         "0.6"
+#define CURRENT_VERSION         "0.7.1"
 #define MDNS_NAME               "potato"
 #define AIR_SENSOR_CLOCK_PIN    D1
 #define AIR_SENSOR_DATA_PIN     D2
@@ -19,6 +19,7 @@
 #define MQTT_COMMAND_TOPIC              "potato/"
 #define MQTT_LOG_TOPIC                  "potato/log"
 #define MQTT_STATE_TOPIC                "potato/state"
+#define MQTT_JSON_TOPIC                 "potato/json"
 #define MQTT_STATE_ON                   "ON"
 #define MQTT_STATE_OFF                  "OFF"
 

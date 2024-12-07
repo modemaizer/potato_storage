@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <PubSubClient.h>
 
 #include "wifi_connector.h"
@@ -72,7 +73,7 @@ void setupMqtt()
 // example: mqttPrintf("topic", "Hello, %s! The answer is %d", "World", 42);
 void mqttPrintf(const char *topic, const char *format, ...)
 {
-  uint8_t bufferSize = 250;
+  uint16_t bufferSize = 512;
   char* buffer = new char[bufferSize];
   va_list args;
   va_start(args, format);
@@ -83,8 +84,17 @@ void mqttPrintf(const char *topic, const char *format, ...)
 }
 
 void mqttSendDeviceState() {
+  DynamicJsonDocument doc(512);
+  doc["airTemp"] = getAirTemperature();
+  doc["humidity"] = getHumidity();;
+  doc["floorTemp"] = getFloorTemperature();
+  doc["heaterState"] = isHeaterEnabled();
+  doc["deviceState"] = getDeviceState();
+  String buf;
+  serializeJson(doc, buf);
+  mqttPrintf(MQTT_JSON_TOPIC, "%s", buf);
   mqttPrintf(MQTT_STATE_TOPIC, "%s", getDeviceState() ? MQTT_STATE_ON : MQTT_STATE_OFF);
-  mqttPrintf(MQTT_HEATER_STATE_TOPIC, "%d", isHeaterEnabled() ? MQTT_STATE_ON : MQTT_STATE_OFF);
+  mqttPrintf(MQTT_HEATER_STATE_TOPIC, "%s", isHeaterEnabled() ? MQTT_STATE_ON : MQTT_STATE_OFF);
   mqttPrintf(MQTT_FLOOR_TEMPERATURE_TOPIC, "%.2f", getFloorTemperature());
   mqttPrintf(MQTT_AIR_TEMPERATURE_TOPIC, "%.2f", getAirTemperature());
   mqttPrintf(MQTT_HUMIDITY_TOPIC, "%.2f", getHumidity());
